@@ -15,7 +15,9 @@ pipeline {
     	stage('sonar') {
             steps {
                 echo 'scanning project'
-			    sh '''mvn sonar:sonar \\
+                sh 'ls -ltr'
+                
+                sh '''cd  spring-boot-app && mvn sonar:sonar \\
                       -Dsonar.host.url=http://54.146.86.182:9000 \\
                       -Dsonar.login=sqa_dd71fc09e84a4ed5a367a2708d50696c19e21f7b'''
             }
@@ -24,7 +26,7 @@ pipeline {
         stage('Build with Maven') {
             steps {
                 echo 'maven build'
-                sh 'mvn clean install'
+                sh 'cd spring-boot-app && mvn clean package'
             }
         }
 
@@ -32,7 +34,7 @@ pipeline {
             steps{
                 script{
                     echo 'docker image build'
-                    sh 'docker build -t ramanijadala/ultimate-cicd .'
+                    sh 'cd spring-boot-app && docker build -t ramanijadala/ultimate-cicd:${BUILD_NUMBER} .'
                 }
             }
         }
@@ -43,13 +45,13 @@ pipeline {
                    sh 'docker login -u ramanijadala -p ${dockerhub}'
 
 }
-                   sh 'docker push ramanijadala/ultimate-cicd'
+                   sh 'docker push ramanijadala/ultimate-cicd:${BUILD_NUMBER}'
                 }
             }
         }
-      /*      stage('Update Deployment File') {
+      stage('Update Deployment File') {
         environment {
-            GIT_REPO_NAME = "project-cicd"
+            GIT_REPO_NAME = "project-cicd-pieline"
             GIT_USER_NAME = "Ramani-github"
         }
         steps {
@@ -58,14 +60,16 @@ pipeline {
                     git config user.email "ramanijadala@gmail.com"
                     git config user.name "Ramani"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g"  deployment.yaml
-                    git add deployment.yaml
+                    sed -i "s/tag/${BUILD_NUMBER}/g"  spring-boot-app-manifests/deployment.yml
+                    git add .
+                    
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+
                     git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
                 '''
             }
         }
-    }*/
+    }
         
     }
 }
