@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: spring-boot-app
-        image: ${env.DOCKER_IMAGE}:${env.BUILD_NUMBER}
+        image: ${env.DOCKER_IMAGE}:${BUILD_NUMBER}
         ports:
         - containerPort: 8080
