@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: mc-app
-        image: ramanijadala/ultimate-cicd:8
+        image: ramanijadala/ultimate-cicd:9
         ports:
         - containerPort: 8080
