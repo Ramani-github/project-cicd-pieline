@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: mc-app-servicemonitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: mc-app  # Ensure this matches the label of your app's service
+  endpoints:
+    - port: http  # This should match the port exposed by the service (usually 'http')
+      path: /metrics  # The path where the metrics are exposed (default is /metrics)
+      interval: 30s
+  namespaceSelector:
+    matchNames:
+      - default  # Ensure this matches the namespace where your app is deployed
