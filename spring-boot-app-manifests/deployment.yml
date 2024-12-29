@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mc-app
-        image: ramanijadala/project:6
+        image: ramanijadala/pipeline:latest
         ports:
         - containerPort: 8080
 ---
